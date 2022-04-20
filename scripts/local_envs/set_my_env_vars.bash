@@ -1,3 +1,4 @@
+#!/usr/bin/zsh
 #cd "$(dirname "${BASH_SOURCE[0]}")"
 #source ./setx.bash BOOTLEG_PREP_DATA_DIR "/nvme2/chatterbox/bootleg"
 #source ./setx.bash BOOTLEG_PREP_LANG_MODULE hebrew
@@ -12,7 +13,7 @@
 #source ./setx.bash BOOTLEG_PREP_PRN_LABELING false
 
 # If Using ZSH
-export BOOTLEG_PREP_DATA_DIR="/lfs/raiders8/0/lorr1"
+export BOOTLEG_PREP_DATA_DIR="/opt/data/cchang/hippo"
 export BOOTLEG_PREP_LANG_MODULE=chinese
 export BOOTLEG_PREP_LANG_CODE=zh
 export STRIP_PUNC_ALIASES=false

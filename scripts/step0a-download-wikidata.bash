@@ -3,6 +3,7 @@ echo "==========================================================================
 echo "Step step0a-download-wikidata"
 echo "=============================================================================="
 echo
+source ./local_envs/set_my_env_vars.bash
 source ./envs.bash
 set +e
 mkdir $BOOTLEG_PREP_DATA_DIR/wikidata/
