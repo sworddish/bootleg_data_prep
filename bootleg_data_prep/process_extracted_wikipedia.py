@@ -163,6 +163,7 @@ class ExtractProcess(object):
                 page = ujson.loads(page)
                 # Turn into HTML for bs4
                 raw_text = html.unescape(page["text"])
+                
                 page_text, entity_data = self.process_mention_tags(raw_text)
                 sentence_all_data = self.sentence_chunk(page_text, entity_data)
                 out_text.write(ujson.dumps({

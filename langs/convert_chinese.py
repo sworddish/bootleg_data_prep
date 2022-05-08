@@ -33,9 +33,11 @@ def convert_text(data_dir, converter):
                 out_f.write(line.strip() + "\n")
                 line = ujson.loads(line)
                 new_aliases = [converter.convert(al) for al in line["aliases"]]
+                new_unswap_aliases = [converter.convert(al) for al in line["unswap_aliases"]]
                 new_sent = converter.convert(line["sentence"])
                 assert len(new_sent) == len(line["sentence"]), f"{line}"
                 assert all([len(a[0]) == len(a[1]) for a in zip(new_aliases, line["aliases"])])
+                line['unswap_aliases'] = new_unswap_aliases;
                 line["aliases"] = new_aliases
                 line["sentence"] = new_sent
                 simple_lines.append(line)

@@ -3,15 +3,16 @@ import unicodedata
 import nltk
 from nltk import tokenize
 from nltk import corpus
+from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktLanguageVars
 
 PUNC = string.punctuation
 PUNC_TRANSLATION_TABLE = str.maketrans(dict.fromkeys(PUNC))  # OR {key: None for key in string.punctuation}
 BASE_STOPWORDS = {"的","一","不","在","人","有","是","为","以","于","上","他","而","后","之","来","及","了","因",
                   "下","可","到","由","这","与","也","此","但","并","个","其","已","无","小","我","们","起","最",
                   "再","今","去","好","只","又","或","很","亦","某","把","那","你","乃","它","吧","被","比","别",
-                  "趁","当","从","得","打","凡","儿","尔","该","各","给","跟","和","何","还","即","几","既","看",
+                  "趁","当","从","得","打","凡","儿","尔","该","各","给","跟","和","还","即","几","既","看",
                   "据","距","靠","啦","另","么","每","嘛","拿","哪","您","凭","且","却","让","仍","啥","如","若",
-                  "使","谁","虽","随","同","所","她","哇","嗡","往","些","向","沿","哟","用","咱","则","怎","曾",
+                  "使","谁","虽","随","同","所","她","哇","嗡","往","些","沿","哟","用","咱","则","怎",
                   "至","致","着","诸","自"}
 NOUNS = ['NN', 'NNS', 'NNP', 'NNPS', 'PRP']
 ENSURE_ASCII = False
@@ -30,11 +31,16 @@ STANDARD_NAMESPACE = {"category", "user", "help", "portal", "draft", "module", "
 #
 ACCEPTED_NAMESPACE = {'w', 'wiktionary', 'wikt'}
 
+class CustomLangVars(PunktLanguageVars):
+    sent_end_chars = ('。','！','？','…','!','?','﹗','!','﹖','?')
+
 def sent_tokenize(sent):
+    # TODO: chinese sent tokenized ok ? 
     return tokenize.sent_tokenize(sent)
 
 def sent_offset_tokenize(sent):
-    return tokenize.punkt.PunktSentenceTokenizer().span_tokenize(sent)
+    tokenizer = PunktSentenceTokenizer(lang_vars = CustomLangVars())
+    return tokenizer.span_tokenize(sent)
 
 def word_offset_tokenize(sent):
     return tokenize.WhitespaceTokenizer().span_tokenize(sent)
