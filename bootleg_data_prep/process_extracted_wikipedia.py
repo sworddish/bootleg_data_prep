@@ -20,6 +20,9 @@ from typing import Dict, List, Any, Tuple
 import bootleg_data_prep.utils.data_prep_utils as prep_utils
 from bootleg_data_prep.language import sent_offset_tokenize, ENSURE_ASCII
 
+def preprocess(raw_text):
+    raw_text = re.sub(r'([….。?﹖？!﹗！])([\s])?(\w+)', '\\1 \\3', raw_text)
+    return raw_text
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
@@ -93,6 +96,7 @@ class ExtractProcess(object):
         """
         # Replace multiple new lines with one
         raw_text = re.sub(r'\n+', '\n', raw_text).strip()
+        raw_text = preprocess(raw_text)
         try:
             soup = BeautifulSoup(raw_text, features="html.parser")
             # Find all mentions
@@ -163,7 +167,7 @@ class ExtractProcess(object):
                 page = ujson.loads(page)
                 # Turn into HTML for bs4
                 raw_text = html.unescape(page["text"])
-                
+
                 page_text, entity_data = self.process_mention_tags(raw_text)
                 sentence_all_data = self.sentence_chunk(page_text, entity_data)
                 out_text.write(ujson.dumps({

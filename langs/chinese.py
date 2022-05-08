@@ -32,7 +32,7 @@ STANDARD_NAMESPACE = {"category", "user", "help", "portal", "draft", "module", "
 ACCEPTED_NAMESPACE = {'w', 'wiktionary', 'wikt'}
 
 class CustomLangVars(PunktLanguageVars):
-    sent_end_chars = ('。','！','？','…','!','?','﹗','!','﹖','?')
+    sent_end_chars = ('.','。','！','？','…','!','?','﹗','!','﹖','?')
 
 def sent_tokenize(sent):
     # TODO: chinese sent tokenized ok ? 
