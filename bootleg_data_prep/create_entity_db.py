@@ -80,7 +80,7 @@ def create_entity_profile(args, entity_symbols):
     # Types
     qid2types = {q: [] for q in entity_symbols.get_all_qids()}
     qid2typeqids = {q: [] for q in entity_symbols.get_all_qids()}
-    print("Processing " + len(qid2types.keys()), " entities....")
+    print("Processing " + str(len(qid2types.keys())) + " entities....")
     # e.g {"人類": 1, "畫家": 2, "書法家": 3....
     vocab_map = json.load(open(args.wd_vocab)) 
     # e.g {"人類": "Q5", "畫家": "Q1028181", "書法家" ....
