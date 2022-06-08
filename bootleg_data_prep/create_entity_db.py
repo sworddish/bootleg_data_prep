@@ -27,6 +27,7 @@ from bootleg.symbols.entity_symbols import EntitySymbols
 from bootleg.symbols.entity_profile import EntityProfile
 from bootleg.symbols.type_symbols import TypeSymbols
 from bootleg.symbols.kg_symbols import KGSymbols
+import bootleg_data_prep.utils.utils as utils
 
 # Properties that are used for types
 # P31 = instance of
@@ -43,6 +44,7 @@ def parse_args():
     parser.add_argument('--kg_triples', type=str, default='kg_triples.json')
     parser.add_argument('--kg_vocab', type=str, default='utils/param_files/pid_names_en.json')
     parser.add_argument('--wd_vocab', type=str, default='wikidatatitle_to_typeid.json')
+    parser.add_argument('--wd_vocab_qid', type=str, default='wikidatatitle_to_typeqid.json')
     parser.add_argument('--wd_types', type=str, default='wikidata_types.json')
     args = parser.parse_args()
     return args
@@ -77,15 +79,29 @@ def create_entity_profile(args, entity_symbols):
     )
     # Types
     qid2types = {q: [] for q in entity_symbols.get_all_qids()}
-    vocab_map = json.load(open(args.wd_vocab))
+    qid2typeqids = {q: [] for q in entity_symbols.get_all_qids()}
+    print("Processing " + len(qid2types.keys()), " entities....")
+    # e.g {"人類": 1, "畫家": 2, "書法家": 3....
+    vocab_map = json.load(open(args.wd_vocab)) 
+    # e.g {"人類": "Q5", "畫家": "Q1028181", "書法家" ....
+    vocab_qid_map = json.load(open(args.wd_vocab_qid))
+    # type_name_index --> type_name 
     vocab_inv = {v: k for k, v in vocab_map.items()}
+    # wikidata_types.json: entity qid --> type_name_index of vocab_inv
     with open(args.wd_types) as in_f:
         type_mappings = json.load(in_f)
         for qid in track(type_mappings, total=len(type_mappings), description="Filt types"):
             # Already has all qids inside
             if qid in qid2types:
                 qid2types[qid] = [vocab_inv[i] for i in type_mappings[qid]][:args.max_types]
+                qid2typeqids[qid] = [vocab_qid_map[vocab_inv[i]] for i in type_mappings[qid]][:args.max_types]
     type_symbols = TypeSymbols(qid2typenames=qid2types, max_types=args.max_types)
+    # TODO: dump qid2typeqids.json then try convert_to_trie
+    utils.dump_json_file(
+            filename=os.path.join(os.path.join(args.data_dir, f"{args.subfolder_name}"),
+             "qid2typeqids.json"), 
+            contents=qid2typeqids
+        )
     entity_profile = EntityProfile(
         entity_symbols=entity_symbols,
         type_systems={"wiki": type_symbols},
